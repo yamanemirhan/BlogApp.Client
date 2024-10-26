@@ -1,8 +1,11 @@
 import PostCard from "@/components/posts/PostCard";
+import { useQuery } from "@tanstack/react-query";
 import { SearchIcon } from "lucide-react";
 import React from "react";
 
 const HomePage = () => {
+  const { data: categories } = useQuery({ queryKey: ["categories"] });
+
   return (
     <div className="">
       {/* banner */}
@@ -81,9 +84,9 @@ const HomePage = () => {
           {/* categories */}
           <div className="flex items-center gap-4 mt-4">
             <button>All</button>
-            <button>Destination</button>
-            <button>Fun</button>
-            <button>Games</button>
+            {categories?.data?.map((cat) => (
+              <button key={cat.categoryId}>{cat.name}</button>
+            ))}
           </div>
           {/* sort by */}
           <div>
