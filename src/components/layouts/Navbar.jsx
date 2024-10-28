@@ -1,6 +1,6 @@
 import { axiosInstance } from "@/lib/axios";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { ArrowDown, ArrowUp, SearchIcon } from "lucide-react";
+import { ArrowDown, ArrowUp, BadgePlus, SearchIcon } from "lucide-react";
 import React, { useState } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
@@ -10,18 +10,12 @@ const Navbar = () => {
   const queryClient = useQueryClient();
   const { toast } = useToast();
 
-  // const { data: authUser } = useQuery({ queryKey: ["authUser"] });
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
 
   const { data: authUser } = useQuery({
-    queryKey: ["getprofile"],
+    queryKey: ["getProfile"],
     queryFn: async () => await axiosInstance.get("/user/me"),
     retry: false,
-  });
-
-  const { data: categories } = useQuery({
-    queryKey: ["categories"],
-    queryFn: async () => await axiosInstance.get("/category/all"),
   });
 
   const {
@@ -40,7 +34,7 @@ const Navbar = () => {
       }
     },
     onSuccess: () => {
-      queryClient.setQueryData(["getprofile"], null);
+      queryClient.setQueryData(["getProfile"], null);
       toast({
         title: "Logout Successful",
         description: "Logged out successfully!",
@@ -85,9 +79,8 @@ const Navbar = () => {
           </div>
           {/* navitems */}
           <div className="flex items-center gap-4 font-semibold">
-            {categories?.data?.map((cat) => (
-              <button key={cat.categoryId}>{cat.name}</button>
-            ))}
+            <NavLink>About</NavLink>
+            <Link>Smt</Link>
           </div>
         </div>
         {/* right */}
@@ -111,19 +104,26 @@ const Navbar = () => {
               </div>
             )}
             {authUser ? (
-              <button
-                onClick={() => setIsProfileDropdownOpen(!isProfileDropdownOpen)}
-                className="flex items-center gap-2 border border-slate-500 rounded-md py-2 px-4 bg-slate-800"
-              >
-                {/* usr image */}
-                <img
-                  src={authUser?.data.profileImageUrl}
-                  className="w-8 h-8 rounded-full"
-                />
-                {/* username */}
-                {authUser?.data.username}
-                {isProfileDropdownOpen ? <ArrowUp /> : <ArrowDown />}
-              </button>
+              <div className="flex items-center gap-4">
+                <Link to={"/post/create"}>
+                  <BadgePlus size={35} />
+                </Link>
+                <button
+                  onClick={() =>
+                    setIsProfileDropdownOpen(!isProfileDropdownOpen)
+                  }
+                  className="flex items-center gap-2 border border-slate-500 rounded-md py-2 px-4 bg-slate-800"
+                >
+                  {/* usr image */}
+                  <img
+                    src={authUser?.data.profileImageUrl}
+                    className="w-8 h-8 rounded-full"
+                  />
+                  {/* username */}
+                  {authUser?.data.username}
+                  {isProfileDropdownOpen ? <ArrowUp /> : <ArrowDown />}
+                </button>
+              </div>
             ) : (
               <>
                 <Link to={"/login"} className="font-semibold">

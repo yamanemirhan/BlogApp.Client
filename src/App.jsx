@@ -5,57 +5,46 @@ import HomePage from "./pages/HomePage";
 import SignUpPage from "./pages/auth/SignUpPage";
 import LoginPage from "./pages/auth/LoginPage";
 import { Toaster } from "@/components/ui/toaster";
-import { getAuthToken } from "./lib/auth";
 import { useQuery } from "@tanstack/react-query";
+import CreatePostPage from "./pages/posts/CreatePostPage";
+import { axiosInstance } from "./lib/axios";
+import PostDetailPage from "./pages/posts/PostDetailPage";
 
 const App = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const { data: authUser, isLoading } = useQuery({
+    queryKey: ["getProfile"],
+    queryFn: async () => await axiosInstance.get("/user/me"),
+    retry: false,
+  });
 
-  // fix here, showing signup or login for a sec
-  useEffect(() => {
-    const token = getAuthToken();
-    if (token) {
-      setIsAuthenticated(true);
-    }
-  }, [isAuthenticated]);
+  // if (isLoading) return null;
 
   return (
     <MainLayout>
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route
-          path="/signup"
-          element={isAuthenticated ? <Navigate to="/" /> : <SignUpPage />}
-        />
-        <Route
-          path="/login"
-          element={isAuthenticated ? <Navigate to="/" /> : <LoginPage />}
-        />
-      </Routes>
+      {!isLoading && (
+        <Routes>
+          <Route path="/" element={<HomePage />} />
 
+          <Route
+            path="/signup"
+            element={authUser ? <Navigate to="/" /> : <SignUpPage />}
+          />
+          <Route
+            path="/login"
+            element={authUser ? <Navigate to="/" /> : <LoginPage />}
+          />
+
+          <Route
+            path="/post/create"
+            element={authUser ? <CreatePostPage /> : <Navigate to="/login" />}
+          />
+
+          <Route path="/post/:id" element={<PostDetailPage />} />
+        </Routes>
+      )}
       <Toaster />
     </MainLayout>
   );
 };
 
 export default App;
-
-// const { data: authUser, isLoading } = useQuery({
-//   use thay key to fetch user without fetching this once again
-//   etc: const {data: authUser, isLoading, error} = useQuery({querKey: ["authUser"]})
-//   queryKey: ["authUser"],
-//   queryFn: async () => {
-//     try {
-//       const res = await axiosInstance.get("/user/me");
-//       return res.data;
-//     } catch (err) {
-//       if (err.response && err.response.status == 401) {
-//         return null;
-//       }
-//       toast err.response.data || smt went wrong
-//     }
-//   },
-// });
-
-// maybe show loading anim
-// if (isLoading) return null;
