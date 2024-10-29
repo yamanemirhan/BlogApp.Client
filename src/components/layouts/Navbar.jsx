@@ -1,6 +1,6 @@
 import { axiosInstance } from "@/lib/axios";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { ArrowDown, ArrowUp, BadgePlus, SearchIcon } from "lucide-react";
+import { ArrowDown, ArrowUp, BadgePlus } from "lucide-react";
 import React, { useState } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
@@ -12,24 +12,18 @@ const Navbar = () => {
 
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
 
-  const { data: authUser } = useQuery({
+  const { data: authUser, isLoading } = useQuery({
     queryKey: ["getProfile"],
-    queryFn: async () => await axiosInstance.get("/user/me"),
-    retry: false,
   });
 
-  const {
-    mutate: logoutMutation,
-    isError,
-    isPending,
-  } = useMutation({
+  const { mutate: logoutMutation } = useMutation({
     mutationFn: async () => {
       try {
         const res = await axiosInstance.post("/auth/logout");
         return res.data;
       } catch (error) {
         throw error.response
-          ? error.response.data
+          ? error.response.response.data
           : new Error("Something went wrong!");
       }
     },
@@ -59,8 +53,11 @@ const Navbar = () => {
   };
 
   const OnProfileClick = () => {
-    console.log("profile");
+    setIsProfileDropdownOpen(false);
+    navigate("/profile/me");
   };
+
+  if (isLoading) return null;
 
   return (
     <nav className="p-5 h-20 bg-black w-full flex items-center text-white fixed z-10">
@@ -87,22 +84,25 @@ const Navbar = () => {
         <div className="flex items-center gap-24">
           <div className="flex items-center gap-4 relative">
             {/* profile dropdown */}
-            {isProfileDropdownOpen && (
-              <div className="absolute top-14 p-2 rounded-sm right-0 bg-zinc-900 border-black shadow-slate-950 shadow-md border w-full flex flex-col gap-4">
-                <button
-                  onClick={OnProfileClick}
-                  className="w-full text-start border-b hover:bg-slate-100 hover:p-1 hover:text-black hover:rounded-sm"
-                >
-                  Profile
-                </button>
-                <button
-                  onClick={OnLogoutClick}
-                  className="w-full text-start border-b hover:bg-red-700 hover:border-b-red-700 hover:p-1 hover:rounded-sm"
-                >
-                  Logout
-                </button>
-              </div>
-            )}
+            <div
+              className={`rounded-md absolute top-14 right-0 bg-zinc-900 border-black shadow-md w-full flex flex-col gap-4 overflow-hidden transition-all duration-300 ${
+                isProfileDropdownOpen ? "max-h-40 p-2" : "max-h-0 p-0"
+              }`}
+            >
+              <button
+                onClick={OnProfileClick}
+                className="w-full text-start border-b hover:bg-slate-100 hover:text-black hover:rounded-sm p-1"
+              >
+                Profile
+              </button>
+              <button
+                onClick={OnLogoutClick}
+                className="w-full text-start border-b hover:bg-red-700 hover:border-b-red-700 hover:rounded-sm p-1"
+              >
+                Logout
+              </button>
+            </div>
+
             {authUser ? (
               <div className="flex items-center gap-4">
                 <Link to={"/post/create"}>
@@ -116,11 +116,11 @@ const Navbar = () => {
                 >
                   {/* usr image */}
                   <img
-                    src={authUser?.data.profileImageUrl}
+                    src={authUser?.profileImageUrl}
                     className="w-8 h-8 rounded-full"
                   />
                   {/* username */}
-                  {authUser?.data.username}
+                  {authUser?.username}
                   {isProfileDropdownOpen ? <ArrowUp /> : <ArrowDown />}
                 </button>
               </div>

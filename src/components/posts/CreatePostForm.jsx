@@ -154,7 +154,7 @@ const CreatePostForm = () => {
         variant: "success",
       });
       // todo:
-      // navigate("/posts");
+      navigate("/profile/me");
     },
     onError: (err) => {
       toast({
@@ -218,7 +218,7 @@ const CreatePostForm = () => {
             name="title"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-white">Title</FormLabel>
+                <FormLabel className="text-lg text-white">Title</FormLabel>
                 <FormControl>
                   <Input placeholder="Enter post title" {...field} />
                 </FormControl>
@@ -233,7 +233,9 @@ const CreatePostForm = () => {
             name="description"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-white">Description</FormLabel>
+                <FormLabel className="text-lg text-white">
+                  Description
+                </FormLabel>
                 <FormControl>
                   <Input placeholder="Enter post description" {...field} />
                 </FormControl>
@@ -248,7 +250,7 @@ const CreatePostForm = () => {
             name="categoryId"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-white">Category</FormLabel>
+                <FormLabel className="text-lg text-white">Category</FormLabel>
                 <Select
                   onValueChange={(value) => field.onChange(Number(value))}
                   value={field.value?.toString() || "0"}
@@ -281,7 +283,7 @@ const CreatePostForm = () => {
 
           {/* Cover Image Field */}
           <FormItem>
-            <FormLabel className="text-white">Cover Image</FormLabel>
+            <FormLabel className="text-lg text-white">Cover Image</FormLabel>
             <FormControl>
               <Input type="file" onChange={handleFileChange} />
             </FormControl>
@@ -294,7 +296,7 @@ const CreatePostForm = () => {
             render={({ field }) => (
               <FormItem className="text-white">
                 <div className="flex md:items-center gap-4 flex-col md:flex-row">
-                  <FormLabel className="text-white">Tags</FormLabel>
+                  <FormLabel className="text-lg text-white">Tags</FormLabel>
                   {tags?.data?.map((tag) => (
                     <div key={tag.tagId} className="flex items-center gap-1">
                       <FormControl>
@@ -322,10 +324,12 @@ const CreatePostForm = () => {
           />
 
           {/* Editor for Content */}
-          <div className="border border-gray-300 rounded-md p-4">
-            <BlockNoteView theme={"dark"} editor={editor} />
+          <div className="flex flex-col gap-4">
+            <FormLabel className="text-lg text-white">Content</FormLabel>
+            <div className="border border-gray-300 rounded-md">
+              <BlockNoteView theme={"dark"} editor={editor} />
+            </div>
           </div>
-
           {/* Submit Button */}
           <Button type="submit" disabled={isPending}>
             {isPending ? "Creating..." : "Create Post"}

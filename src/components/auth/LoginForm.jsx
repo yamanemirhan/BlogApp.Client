@@ -1,6 +1,6 @@
 import { axiosInstance } from "@/lib/axios";
 import { useMutation } from "@tanstack/react-query";
-import { NavLink, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -59,14 +59,13 @@ const LoginForm = () => {
       }
     },
     onSuccess: () => {
+      queryClient.invalidateQueries(["getProfile"]);
       toast({
         title: "Login Successful",
         description: "Logged in successfully!",
         status: "success",
         variant: "success",
       });
-      // setTimeout(100);
-      queryClient.invalidateQueries(["getprofile"]);
       navigate("/");
     },
     onError: (err) => {
@@ -125,7 +124,8 @@ const LoginForm = () => {
                   />
                 </FormControl>
                 <FormDescription className="text-gray-300 flex justify-end">
-                  <NavLink to={"/forgot-password"}>Forgot password?</NavLink>
+                  {/* todo: dialog */}
+                  <Link to={"/forgot-password"}>Forgot password?</Link>
                 </FormDescription>
                 <FormMessage />
               </FormItem>
