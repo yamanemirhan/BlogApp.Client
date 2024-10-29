@@ -13,7 +13,7 @@ const PostCard = ({ post }) => {
         </div>
         <img
           src={post.coverImageUrl}
-          className="rounded-t-md w-fit bg-cover h-fit"
+          className="rounded-t-md object-fill w-full h-48"
         />
 
         <div className="flex items-center justify-between text-sm text-gray-500 p-1">
