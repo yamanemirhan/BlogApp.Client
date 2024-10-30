@@ -3,6 +3,7 @@ import Posts from "@/components/posts/Posts";
 import { useQuery } from "@tanstack/react-query";
 import { axiosInstance } from "@/lib/axios";
 import { useParams, useNavigate } from "react-router-dom";
+import { formatDate } from "@/lib/formatDate";
 
 const UserProfilePage = () => {
   const { username } = useParams();
@@ -58,9 +59,17 @@ const UserProfilePage = () => {
 
   return (
     <div className="text-white">
-      <h1>{userProfile?.username}</h1>
-      <h2 className="text-2xl text-white text-center">Blogs</h2>
-      <div className="my-4 p-6 flex flex-col gap-2 max-w-[1536px] mx-auto">
+      <div className="flex flex-col gap-2">
+        <img
+          src={userProfile?.profileImageUrl}
+          className="w-80 h-80 rounded-full mx-auto"
+        />
+        <h2 className="text-4xl text-center">{userProfile?.username}</h2>
+        <p className="text-gray-400 text-center">
+          Member since {formatDate(userProfile?.createdAt).split(" at ")[0]}
+        </p>
+      </div>
+      <div className="flex flex-col gap-2 max-w-[1536px] mx-auto my-10">
         <Posts
           queryKey={["userPosts", userProfile?.id]}
           baseUrl={`/post/user/id/${userProfile?.id}`}
