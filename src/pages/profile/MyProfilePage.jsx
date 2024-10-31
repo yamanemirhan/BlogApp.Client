@@ -116,7 +116,8 @@ const MyProfilePage = () => {
   const { mutate: removeProfileImage } = useMutation({
     mutationFn: async () => {
       const res = await axiosInstance.put("/user/update", {
-        profileImageUrl: null,
+        profileImageUrl:
+          "https://res.cloudinary.com/dcj1bb8vk/image/upload/v1728852537/blogapp/default-user_uo85fb.jpg",
       });
       return res.data;
     },
