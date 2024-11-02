@@ -14,6 +14,7 @@ const Posts = ({
   showFilters = true,
   customQueryFn = null,
   skeletonCount = 6,
+  showBlogsTitle = true,
 }) => {
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -103,9 +104,11 @@ const Posts = ({
           setSelectedCategories={setSelectedCategories}
         />
       )}
-      <h2 className="text-2xl text-white text-center pb-4">
-        Blogs ({postsData?.length})
-      </h2>
+      {showBlogsTitle && (
+        <h2 className="text-2xl text-white text-center pb-4">
+          Blogs ({postsData?.length})
+        </h2>
+      )}
       {isLoading ? (
         <div className="grid grid-flow-row mx-auto gap-20 grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 max-w-[1560px] place-items-center">
           {[...Array(skeletonCount)].map((_, index) => (

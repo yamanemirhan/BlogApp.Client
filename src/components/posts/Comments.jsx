@@ -21,8 +21,13 @@ const Comments = ({ comments, postId }) => {
 
   return (
     <div className="mt-8">
-      <div className="flex items-center gap-8 mb-4">
-        <h2 className="text-xl font-semibold text-white">Comments</h2>
+      <div className="mb-6">
+        <CommentForm postId={postId} allComments={comments} />
+      </div>
+      <div className="flex items-center gap-8">
+        <h2 className="text-xl font-semibold text-white">
+          Comments ({comments.length})
+        </h2>
         <div className="flex items-center gap-2">
           <span className="text-sm text-gray-300">Sort by:</span>
           <Select value={sortOrder} onValueChange={setSortOrder}>
@@ -39,9 +44,6 @@ const Comments = ({ comments, postId }) => {
             </SelectContent>
           </Select>
         </div>
-      </div>
-      <div className="mb-6">
-        <CommentForm postId={postId} allComments={comments} />
       </div>
       <div>
         {sortedComments.map((comment) => (

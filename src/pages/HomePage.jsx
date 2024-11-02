@@ -60,7 +60,7 @@ const HomePage = () => {
           Discover the categories that match your interests and dive into our
           latest articles.
         </p>
-        <Posts />
+        <Posts showBlogsTitle={false} />
       </div>
     </div>
   );
