@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { axiosInstance } from "@/lib/axios";
 import { useParams } from "react-router-dom";
 import PostDetailContent from "@/components/posts/PostDetailContent";
+import Comments from "@/components/posts/Comments";
 
 const PostDetailPage = () => {
   const { id: postId } = useParams();
@@ -47,6 +48,7 @@ const PostDetailPage = () => {
   return (
     <div className="">
       <PostDetailContent content={post.content} />
+      <Comments comments={post.comments} postId={postId} />
     </div>
   );
 };
